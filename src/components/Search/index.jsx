@@ -1,18 +1,20 @@
 import React, {Component} from 'react'
 import axios from "axios";
+import PubSub from 'pubsub-js'
 
 export default class Search extends Component {
+
   searchUsers = () => {
 
-    // 连续解构赋值，并将 value 重命名为 keyWord
+    // 从输入获取数据，连续解构赋值，并将 value 重命名为 keyWord
     const {keyWordElement: {value: keyWord}} = this
-    this.props.updateAppState({isFirst: false, isLoading: true})
-    axios.get(`http://localhost:3000/api1/search/uoosers?q=${keyWord}`).then(
+    PubSub.publish('fetchUserData',{isFirst: false, isLoading: true})
+    axios.get(`http://localhost:3000/api1/search/users?q=${keyWord}`).then(
       response => {
-        this.props.updateAppState({isLoading:false, users: response.data.items})
+        PubSub.publish('fetchUserData', {isLoading:false, users: response.data.items})
       },
       error => {
-        this.props.updateAppState({isLoading: false, error:error.message})
+        PubSub.publish('fetchUserData',{isLoading: false, error:error.message})
       }
     )
   }
