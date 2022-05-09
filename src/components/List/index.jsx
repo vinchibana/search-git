@@ -1,23 +1,29 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import './index.css'
 
 export default class List extends Component {
-	render() {
-		
-		return (
-				<div className="row">
-					{this.props.users.map((userObject) => {
+  render() {
 
-						return (
-								<div key={userObject.id} className="card">
-									<a rel="noreferrer" href={userObject.html_url} target="_blank">
-										<img alt="head_portrait" src={userObject.avatar_url} style={{width:'100px'}} />
-									</a>
-									<p className="card-text">{userObject.login}</p>
-								</div>
-						)
-					})}
-				</div>
-		)
-	}
+    // 遍历 users 对象数组，为每个 userObject 创建一个 card 元素（每个 card 需要唯一的 key）
+    const {users, isFirst, isLoading, error} = this.props
+    return (
+      <div className="row">
+        {
+          isFirst ? <h2>Welcome</h2> :
+            isLoading ? <h2>Loading searching results...</h2> :
+              error ? <h2 style={{color:'red'}}>{error}</h2> :
+          users.map((userObject) => {
+            return (
+              <div key={userObject.id} className="card">
+                <a rel="noreferrer" href={userObject.html_url} target="_blank">
+                  <img alt="head_portrait" src={userObject.avatar_url} style={{width: '100px'}}/>
+                </a>
+                <p className="card-text">{userObject.login}</p>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
 }
